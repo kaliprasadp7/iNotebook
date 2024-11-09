@@ -4,15 +4,15 @@ import NoteContext from './NoteContext'
 function NoteState(props) {
   const notesInitial = [];
   const host = 'http://localhost:3001'
-
   const [notes, setNotes] = useState(notesInitial);
+
 
   //Fetch all notes
   const getNotes = async () => {
     //API call
     const response = await fetch(`${host}/api/notes/fetchallnotes`, {
-      method : 'GET',
-      headers : {
+      method: 'GET',
+      headers: {
         'Content-Type': 'application/json',
         'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjcyN2JlMWEzNDEwODc3YjkzYTY4N2ZhIn0sImlhdCI6MTczMDcwOTQ4MX0.ZPiWLuEixGQuhyr1F7JgpyuTy_MPzRJo7X2PVHlQBC0'
       }
@@ -21,22 +21,23 @@ function NoteState(props) {
     setNotes(json);
   }
 
-  //Add a Note
-  const addNote = (title, description, tag) => {
-    //API call pending
 
-    //Logic to Add note in client
-    const note = {
-      "_id": "6728f0d08eg02e42fd71sdf2b552a",
-      "user": "6727be1a3410877b93a687fa",
-      "title": title,
-      "description": description,
-      "tag": tag,
-      "date": "2024-11-04T16:05:36.210Z",
-      "__v": 0
-    };
+  //Add a Note
+  const addNote = async (title, description, tag) => {
+    //API call 
+    const response = await fetch(`${host}/api/notes/addnote`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjcyN2JlMWEzNDEwODc3YjkzYTY4N2ZhIn0sImlhdCI6MTczMDcwOTQ4MX0.ZPiWLuEixGQuhyr1F7JgpyuTy_MPzRJo7X2PVHlQBC0'
+      },
+      body: JSON.stringify({title, description, tag})
+    })
+    const note = await response.json();
     setNotes(notes.concat(note));
   }
+
+
   //Edit a Note
   const editNote = (id, title, description, tag) => {
     //API call pending 
@@ -52,9 +53,19 @@ function NoteState(props) {
     }
   }
 
+  
   //Delete a Note
-  const deleteNote = (id) => {
-    //API call pending 
+  const deleteNote = async (id) => {
+    //API call
+    const response = await fetch(`${host}/api/notes/deletenote/${id}`, {
+      method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjcyN2JlMWEzNDEwODc3YjkzYTY4N2ZhIn0sImlhdCI6MTczMDcwOTQ4MX0.ZPiWLuEixGQuhyr1F7JgpyuTy_MPzRJo7X2PVHlQBC0'
+      }
+    })
+    const json = await response.json();
+    console.log(json)
 
     //Logic to Delete in client
     const newNote = notes.filter((note) => { return note._id !== id })
