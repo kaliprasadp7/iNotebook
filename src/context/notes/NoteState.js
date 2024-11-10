@@ -39,21 +39,34 @@ function NoteState(props) {
 
 
   //Edit a Note
-  const editNote = (id, title, description, tag) => {
-    //API call pending 
+  const editNote = async (id, title, description, tag) => {
+    //API call
+    const response = await fetch(`${host}/api/notes/updatenote/${id}`, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjcyN2JlMWEzNDEwODc3YjkzYTY4N2ZhIn0sImlhdCI6MTczMDcwOTQ4MX0.ZPiWLuEixGQuhyr1F7JgpyuTy_MPzRJo7X2PVHlQBC0'
+      },
+      body: JSON.stringify({title, description, tag})
+    })
+    const json = await response.json()
+    console.log(json)
 
     //Logic to Edit in client
-    for (let i = 0; i < notes.length; i++) {
-      const element = notes[i];
-      if (element._id === id) {
-        element.title = title;
-        element.description = description;
-        element.tag = tag;
-      }
-    }
+    // for (let i = 0; i < notes.length; i++) {
+    //   const element = notes[i];
+    //   if (element._id === id) {
+    //     element.title = title;
+    //     element.description = description;
+    //     element.tag = tag;
+    //   }
+    // }
+    setNotes(prevNotes => 
+      prevNotes.map(note => note._id === id ? { ...note, title, description, tag } : note)
+    );
   }
 
-  
+
   //Delete a Note
   const deleteNote = async (id) => {
     //API call
