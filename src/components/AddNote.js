@@ -2,7 +2,7 @@ import React, { useContext, useState } from 'react'
 import NoteContext from '../context/notes/NoteContext'
 
 
-const AddNote = () => {
+const AddNote = (props) => {
   const context = useContext(NoteContext);
   const { addNote } = context;
   const [note, setNote] = useState({title: "", description: "", tag: "" })
@@ -17,7 +17,7 @@ const AddNote = () => {
     setNote({...note, [e.target.name]: e.target.value})
   }
   return (
-    <div className="container my-3">
+    <div className="container my-3 mt-5">
       <h2>Add a Note</h2>
       <form className="my-2">
         <div className="mb-3">

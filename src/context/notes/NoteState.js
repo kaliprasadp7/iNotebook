@@ -14,7 +14,7 @@ function NoteState(props) {
       method: 'GET',
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjcyN2JlMWEzNDEwODc3YjkzYTY4N2ZhIn0sImlhdCI6MTczMDcwOTQ4MX0.ZPiWLuEixGQuhyr1F7JgpyuTy_MPzRJo7X2PVHlQBC0'
+        'auth-token': localStorage.getItem('token')
       }
     })
     const json = await response.json();
@@ -29,12 +29,13 @@ function NoteState(props) {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjcyN2JlMWEzNDEwODc3YjkzYTY4N2ZhIn0sImlhdCI6MTczMDcwOTQ4MX0.ZPiWLuEixGQuhyr1F7JgpyuTy_MPzRJo7X2PVHlQBC0'
+        'auth-token': localStorage.getItem('token')
       },
       body: JSON.stringify({title, description, tag})
     })
     const note = await response.json();
     setNotes(notes.concat(note));
+    props.showAlert("Note Added Successfully", "success")
   }
 
 
@@ -45,25 +46,17 @@ function NoteState(props) {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjcyN2JlMWEzNDEwODc3YjkzYTY4N2ZhIn0sImlhdCI6MTczMDcwOTQ4MX0.ZPiWLuEixGQuhyr1F7JgpyuTy_MPzRJo7X2PVHlQBC0'
+        'auth-token': localStorage.getItem('token')
       },
       body: JSON.stringify({title, description, tag})
     })
     const json = await response.json()
     console.log(json)
 
-    //Logic to Edit in client
-    // for (let i = 0; i < notes.length; i++) {
-    //   const element = notes[i];
-    //   if (element._id === id) {
-    //     element.title = title;
-    //     element.description = description;
-    //     element.tag = tag;
-    //   }
-    // }
     setNotes(prevNotes => 
       prevNotes.map(note => note._id === id ? { ...note, title, description, tag } : note)
     );
+    props.showAlert("Note Updated Successfully", "success")
   }
 
 
@@ -74,7 +67,7 @@ function NoteState(props) {
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjcyN2JlMWEzNDEwODc3YjkzYTY4N2ZhIn0sImlhdCI6MTczMDcwOTQ4MX0.ZPiWLuEixGQuhyr1F7JgpyuTy_MPzRJo7X2PVHlQBC0'
+        'auth-token': localStorage.getItem('token')
       }
     })
     const json = await response.json();
@@ -83,6 +76,7 @@ function NoteState(props) {
     //Logic to Delete in client
     const newNote = notes.filter((note) => { return note._id !== id })
     setNotes(newNote)
+    props.showAlert("Note Deleted Successfully", "success")
     // console.log(id);
   }
 

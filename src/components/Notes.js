@@ -2,13 +2,21 @@ import React, { useContext, useEffect, useRef, useState } from 'react'
 import NoteContext from '../context/notes/NoteContext'
 import Noteitem from './Noteitem';
 import AddNote from './AddNote';
+import { useNavigate } from 'react-router-dom';
 
-const Notes = () => {
+const Notes = (props) => {
     const context = useContext(NoteContext);
     const { notes, getNotes, editNote } = context;
+    const navigate = useNavigate();
     //Fetching data from the backend api once
     useEffect(() => {
-        getNotes();
+        if (localStorage.getItem('token')) {
+            getNotes();
+        }
+        else {
+            navigate('/login')
+            props.showAlert("Please Login to use iNotebook", "danger")
+        }
         // eslint-disable-next-line
     }, [])
     const [note, setNote] = useState({ id: "", etitle: "", edescription: "", etag: "" })
@@ -35,7 +43,7 @@ const Notes = () => {
 
     return (
         <>
-            <AddNote />
+            <AddNote showAlert={props.showAlert} />
 
             {/* Update Note  */}
             <button type="button" ref={ref} className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModal">
@@ -67,7 +75,7 @@ const Notes = () => {
                         </div>
                         <div className="modal-footer">
                             <button type="button" className="btn btn-secondary" data-bs-dismiss="modal" ref={closeRef}>Close</button>
-                            <button disabled={note.etitle.length<5 || note.edescription.length<5 || note.etag.length<3} type="button" className="btn btn-primary"  onClick={handleClick}>Update Note</button>
+                            <button disabled={note.etitle.length < 5 || note.edescription.length < 5 || note.etag.length < 3} type="button" className="btn btn-primary" onClick={handleClick}>Update Note</button>
                         </div>
                     </div>
                 </div>
@@ -75,7 +83,7 @@ const Notes = () => {
 
             <div className="row my-3">
                 <h2>Your Notes</h2>
-                <div className="container">{notes.length===0 && "No notes to display!"}</div>
+                <div className="container">{notes.length === 0 && "No notes to display!"}</div>
                 {notes.map((note) => {
                     return <Noteitem key={note._id} note={note} updateNote={updateNote} />
                 })}
